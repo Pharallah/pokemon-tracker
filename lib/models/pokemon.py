@@ -50,12 +50,11 @@ class Pokemon:
     
     @classmethod
     def create_table(cls):
-        """ Create a new table to persist the attributes of Department instances """
         sql = """
             CREATE TABLE IF NOT EXISTS pokemon (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            type TEXT,
+            pokemon_type TEXT,
             level INTEGER,
             trainer_id INTEGER,
             FOREIGN KEY (trainer_id) REFERENCES trainer(id)
@@ -66,9 +65,20 @@ class Pokemon:
     
     @classmethod
     def drop_table(cls):
-        """ Drop the table that persists Department instances """
         sql = """
             DROP TABLE IF EXISTS pokemon;
         """
         CURSOR.execute(sql)
         CONN.commit()
+
+    def save(self):
+        sql = """
+            INSERT INTO pokemon (name, pokemon_type, level, trainer_id)
+            VALUES (?, ?, ?, ?)
+        """
+
+        CURSOR.execute(sql, (self.name, self.pokemon_type, self.level, self.trainer_id))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self

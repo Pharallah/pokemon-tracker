@@ -21,7 +21,6 @@ class Trainer:
 
     @classmethod
     def create_table(cls):
-        """ Create a new table to persist the attributes of Department instances """
         sql = """
             CREATE TABLE IF NOT EXISTS trainers (
             id INTEGER PRIMARY KEY,
@@ -32,9 +31,20 @@ class Trainer:
 
     @classmethod
     def drop_table(cls):
-        """ Drop the table that persists Department instances """
         sql = """
             DROP TABLE IF EXISTS trainers;
         """
         CURSOR.execute(sql)
         CONN.commit()
+
+    def save(self):
+        sql = """
+            INSERT INTO trainers (name)
+            VALUES (?)
+        """
+
+        CURSOR.execute(sql, (self.name,))
+        CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
