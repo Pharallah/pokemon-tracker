@@ -85,7 +85,15 @@ class Pokemon:
 
     @classmethod
     def create(cls, name, pokemon_type, level, trainer_id):
-        """ Initialize a new Department instance and save the object to the database """
         pokemon = cls(name, pokemon_type, level, trainer_id)
         pokemon.save()
         return pokemon
+    
+    def update(self):
+        sql = """
+            UPDATE pokemon
+            SET name = ?, pokemon_type = ?, level = ?, trainer_id = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.pokemon_type, self.level, self.trainer_id, self.id))
+        CONN.commit()

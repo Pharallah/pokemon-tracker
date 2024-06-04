@@ -54,3 +54,12 @@ class Trainer:
         trainer = cls(name)
         trainer.save()
         return trainer
+
+    def update(self):
+        sql = """
+            UPDATE trainers
+            SET name = ?
+            WHERE id = ?
+        """
+        CURSOR.execute(sql, (self.name, self.id))
+        CONN.commit()
