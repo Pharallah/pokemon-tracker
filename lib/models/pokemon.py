@@ -1,4 +1,6 @@
 from models.__init__ import CONN, CURSOR
+from models.trainer import Trainer
+
 
 class Pokemon:
     
