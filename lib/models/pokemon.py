@@ -97,3 +97,16 @@ class Pokemon:
         """
         CURSOR.execute(sql, (self.name, self.pokemon_type, self.level, self.trainer_id, self.id))
         CONN.commit()
+
+    def delete(self):
+        sql = """
+            DELETE FROM pokemon
+            WHERE id = ?
+        """
+
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+
+        self.id = None
