@@ -76,3 +76,17 @@ class Trainer:
         del type(self).all[self.id]
 
         self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        # Check the dictionary for an existing instance using the row's primary key
+        trainer = cls.all.get(row[0])
+        if trainer:
+            # ensure attributes match row values in case local instance was modified
+            trainer.name = row[1]
+        else:
+            # not in dictionary, create new instance and add to dictionary
+            trainer = cls(row[1])
+            trainer.id = row[0]
+            cls.all[trainer.id] = trainer
+        return trainer

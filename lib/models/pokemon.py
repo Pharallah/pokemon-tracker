@@ -110,3 +110,20 @@ class Pokemon:
         del type(self).all[self.id]
 
         self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        # Check the dictionary for an existing instance using the row's primary key
+        pokemon = cls.all.get(row[0])
+        if pokemon:
+            # ensure attributes match row values in case local instance was modified
+            pokemon.name = row[1]
+            pokemon.pokemon_type = row[2]
+            pokemon.level = row[3]
+            pokemon.trainer_id = row[4]
+        else:
+            # not in dictionary, create new instance and add to dictionary
+            pokemon = cls(row[1], row[2], row[3], row[4])
+            pokemon.id = row[0]
+            cls.all[pokemon.id] = pokemon
+        return pokemon
