@@ -36,3 +36,30 @@ class Pokemon:
             self._pokemon_type = pokemon_type
         else:
             raise ValueError("Please enter valid Pokemon Type: Fire, Water, or Grass")
+
+    @property
+    def trainer_id(self):
+        return self._trainer_id
+
+    @trainer_id.setter
+    def trainer_id(self, id):
+        if type(id) is int and Trainer.find_by_id(id):
+            self._trainer_id = id
+        else:
+            raise ValueError("Trainer ID must reference a trainer in the database")
+    
+    @classmethod
+    def create_table(cls):
+        """ Create a new table to persist the attributes of Department instances """
+        sql = """
+            CREATE TABLE IF NOT EXISTS pokemon (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            type TEXT,
+            level INTEGER,
+            trainer_id INTEGER,
+            FOREIGN KEY (trainer_id) REFERENCES trainer(id)
+            )
+        """
+        CURSOR.execute(sql)
+        CONN.commit()

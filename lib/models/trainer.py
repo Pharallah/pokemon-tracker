@@ -19,3 +19,13 @@ class Trainer:
         else:
             raise ValueError("Name must be a non-empty string")
 
+    @classmethod
+    def create_table(cls):
+        """ Create a new table to persist the attributes of Department instances """
+        sql = """
+            CREATE TABLE IF NOT EXISTS trainers (
+            id INTEGER PRIMARY KEY,
+            name TEXT)
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
