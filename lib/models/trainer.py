@@ -123,3 +123,18 @@ class Trainer:
 
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
+
+    
+    def pokemon(self):
+        # Import from here to avoid circular imports (endless loop)
+        from models.pokemon import Pokemon
+        sql = """
+            SELECT * FROM pokemon
+            WHERE trainer_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+
+        rows = CURSOR.fetchall()
+        return [
+            Pokemon.instance_from_db(row) for row in rows
+        ]
