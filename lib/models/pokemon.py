@@ -127,3 +127,14 @@ class Pokemon:
             pokemon.id = row[0]
             cls.all[pokemon.id] = pokemon
         return pokemon
+
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT *
+            FROM pokemon
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]

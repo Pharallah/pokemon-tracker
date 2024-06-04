@@ -90,3 +90,14 @@ class Trainer:
             trainer.id = row[0]
             cls.all[trainer.id] = trainer
         return trainer
+    
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT *
+            FROM trainers
+        """
+
+        rows = CURSOR.execute(sql).fetchall()
+
+        return [cls.instance_from_db(row) for row in rows]
