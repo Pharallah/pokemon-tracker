@@ -63,3 +63,12 @@ class Pokemon:
         """
         CURSOR.execute(sql)
         CONN.commit()
+    
+    @classmethod
+    def drop_table(cls):
+        """ Drop the table that persists Department instances """
+        sql = """
+            DROP TABLE IF EXISTS pokemon;
+        """
+        CURSOR.execute(sql)
+        CONN.commit()
