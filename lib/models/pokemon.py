@@ -6,11 +6,10 @@ class Pokemon:
     
     all = {}
 
-    def __init__(self, name, pokemon_type, level=1, trainer_id, id=None):
+    def __init__(self, name, pokemon_type, trainer_id, id=None):
         self.id = id
         self.name = name
         self.pokemon_type = pokemon_type
-        self.level = level
         self.trainer_id = trainer_id
 
     @property
@@ -30,7 +29,7 @@ class Pokemon:
 
     @pokemon_type.setter
     def pokemon_type(self, pokemon_type):
-        valid_types = ["Fire", "Water", "Grass"]
+        valid_types = ["Fire", "Water", "Grass", "Electric"]
         
         if pokemon_type in valid_types:
             self._pokemon_type = pokemon_type
@@ -55,7 +54,6 @@ class Pokemon:
             id INTEGER PRIMARY KEY,
             name TEXT,
             pokemon_type TEXT,
-            level INTEGER,
             trainer_id INTEGER,
             FOREIGN KEY (trainer_id) REFERENCES trainer(id)
             )
@@ -73,29 +71,29 @@ class Pokemon:
 
     def save(self):
         sql = """
-            INSERT INTO pokemon (name, pokemon_type, level, trainer_id)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO pokemon (name, pokemon_type, trainer_id)
+            VALUES (?, ?, ?)
         """
 
-        CURSOR.execute(sql, (self.name, self.pokemon_type, self.level, self.trainer_id))
+        CURSOR.execute(sql, (self.name, self.pokemon_type, self.trainer_id))
         CONN.commit()
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
 
     @classmethod
-    def create(cls, name, pokemon_type, level, trainer_id):
-        pokemon = cls(name, pokemon_type, level, trainer_id)
+    def create(cls, name, pokemon_type, trainer_id):
+        pokemon = cls(name, pokemon_type, trainer_id)
         pokemon.save()
         return pokemon
     
     def update(self):
         sql = """
             UPDATE pokemon
-            SET name = ?, pokemon_type = ?, level = ?, trainer_id = ?
+            SET name = ?, pokemon_type = ?, trainer_id = ?
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.name, self.pokemon_type, self.level, self.trainer_id, self.id))
+        CURSOR.execute(sql, (self.name, self.pokemon_type, self.trainer_id, self.id))
         CONN.commit()
 
     def delete(self):
@@ -119,11 +117,10 @@ class Pokemon:
             # ensure attributes match row values in case local instance was modified
             pokemon.name = row[1]
             pokemon.pokemon_type = row[2]
-            pokemon.level = row[3]
-            pokemon.trainer_id = row[4]
+            pokemon.trainer_id = row[3]
         else:
             # not in dictionary, create new instance and add to dictionary
-            pokemon = cls(row[1], row[2], row[3], row[4])
+            pokemon = cls(row[1], row[2], row[3])
             pokemon.id = row[0]
             cls.all[pokemon.id] = pokemon
         return pokemon
