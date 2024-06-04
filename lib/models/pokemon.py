@@ -82,3 +82,10 @@ class Pokemon:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
+    @classmethod
+    def create(cls, name, pokemon_type, level, trainer_id):
+        """ Initialize a new Department instance and save the object to the database """
+        pokemon = cls(name, pokemon_type, level, trainer_id)
+        pokemon.save()
+        return pokemon

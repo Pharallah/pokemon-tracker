@@ -48,3 +48,9 @@ class Trainer:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+    
+    @classmethod
+    def create(cls, name):
+        trainer = cls(name)
+        trainer.save()
+        return trainer
