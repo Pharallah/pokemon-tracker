@@ -1,7 +1,7 @@
 # lib/helpers.py
 from models.trainer import Trainer
 from models.pokemon import Pokemon
-
+from pokemon_list import pokemon_list
 
 current_trainer = []
 
@@ -89,4 +89,3 @@ def trainer_instance():
 def exit_program():
     print("Goodbye!")
     exit()
-

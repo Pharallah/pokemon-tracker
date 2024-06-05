@@ -8,7 +8,6 @@ from helpers import (
     delete_trainer,
     trainer_instance,
     update_trainer_name,
-    # post_trainer_update,
     catch_pokemon
 )
 
@@ -90,10 +89,6 @@ def trainer_page(trainer):
 def trainer_selector():
     trainer = trainer_instance()
     trainer_profile(trainer)
-
-# def trainer_updated_selector():
-#     trainer = post_trainer_update()
-#     trainer_profile(trainer)
 
 def trainer_profile(trainer):
     trainer_page(trainer)
