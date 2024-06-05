@@ -2,7 +2,7 @@
 from models.trainer import Trainer
 from models.pokemon import Pokemon
 
-
+# COMPLETE
 def view_all_trainers():
     trainers = Trainer.get_all()
     for index, trainer in enumerate(trainers, start=1):
@@ -11,6 +11,20 @@ def view_all_trainers():
 def view_all_pokemon():
     pass
 
+# COMPLETE
+def trainer_instance():
+    name = input("Enter Trainer's Name from List: ")
+    all_trainers = Trainer.get_all()
+    lowered_trainers = [trainer.name.lower() for trainer in all_trainers]
+
+    if name.lower() not in lowered_trainers:
+        print("Please Enter Valid Trainer Name: ")
+    else:
+        for trainer in all_trainers:
+            if trainer.name.lower() == name.lower():
+                return trainer
+
+# COMPLETE
 def create_trainer():
     name = input("Enter your Trainer name: ")
     if isinstance(name, str) and 15 >= len(name) >= 5:
@@ -27,6 +41,7 @@ def view_trainer_details():
         if number == index:
             trainer.pokemon()
 
+# COMPLETE
 def delete_trainer():
     name = input("Enter Trainer's Name to Delete: ")
     trainers = Trainer.get_all()
