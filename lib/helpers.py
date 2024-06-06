@@ -7,6 +7,12 @@ import time
 
 current_trainer = []
 
+# COMPLETE
+def random_pokemon():
+    randomized_pokemon = random.choice(pokemon_list())
+    return randomized_pokemon
+
+# COMPLETE
 def return_current_trainer():
     return current_trainer[0]
 
@@ -16,16 +22,16 @@ def view_all_trainers():
     for index, trainer in enumerate(trainers, start=1):
         print(f"                  {index}. {trainer.name}")
 
-def view_all_pokemon():
-    pass
-
 # COMPLETE
 def create_trainer():
     name = input("Enter your Trainer name: ")
+    fresh_pokemon = random_pokemon()
 
     if isinstance(name, str) and 15 >= len(name) >= 5:
-        Trainer.create(name.title())
-        print(f"{name.title()} has joined the team!")
+        new_trainer = Trainer.create(name.title())
+        new_pokemon = Pokemon.create(fresh_pokemon[0], fresh_pokemon[1], new_trainer.id)
+        print(f"{name.title()} Has Joined The Team!")
+        print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {new_pokemon.name}")
     else:
         print("Please enter a name between 5 and 15 characters long: ")
         create_trainer()
@@ -42,7 +48,7 @@ def delete_trainer():
         for trainer in trainers:
             if trainer.name.lower() == name.lower():
                 trainer.delete()
-                print(f"{trainer.name} Has Been Deleted!")
+                print(f"Trainer {trainer.name} Has Left The Team!")
 
 
 def update_trainer_name():
@@ -73,36 +79,42 @@ def trainer_instance():
                 current_trainer.append(trainer)
                 return trainer
 
-def random_pokemon():
-    randomized_pokemon = random.choice(pokemon_list())
-    return randomized_pokemon
 
+
+# COMPLETE
 def catch_pokemon(trainer):
     from cli import trainer_profile
     wild_pokemon = random_pokemon()
     current_pokemon = []
     
-    # Randomly generate a wild pokemon
+    # Randomly generate a new wild pokemon not in Trainer's roster
     if wild_pokemon not in trainer.pokemon():
         new_pokemon = Pokemon.create(wild_pokemon[0], wild_pokemon[1], trainer.id)
         current_pokemon.clear()
         current_pokemon.append(new_pokemon)
-
-    # Choose random pokemon from trainer's roster to fight
-    fighting_pokemon = random.choice(trainer.pokemon())
+    
+    # Avoids the new pokemon from being chosen to fight itself
+    filtered_roster = [p for p in trainer.pokemon() if p != current_pokemon[0]]
+    breakpoint()
+    # Choose random pokemon from filtered roster to fight
+    fighting_pokemon = random.choice(filtered_roster)
     opp_pokemon = current_pokemon[0].name
     trainers_chosen_pokemon = fighting_pokemon.name
+    
+    # for pokemon_in_roster in trainer.pokemon():
+    #     if pokemon_in_roster == wild_pokemon:
+    #         current_
 
     # Battle Scene Dialogue
-    print(f"Battle with {opp_pokemon} has started!!!")
+    print(f"Battle With A Wild {opp_pokemon} has started!!!")
     time.sleep(2)
     print(f"Trainer {trainer.name} Chooses {trainers_chosen_pokemon} To Fight {opp_pokemon}!!!")
     time.sleep(2)
     print(f"{opp_pokemon} attacks!!!")
     time.sleep(2)
-    print(f"{trainers_chosen_pokemon} Landed A Critical Hit!")
+    print(f"{trainers_chosen_pokemon} Attacks Back And Landed A Critical Hit!")
     time.sleep(2)
-    print(f"{trainer.name} Throws a Master Ball at {opp_pokemon}!")
+    print(f"Trainer {trainer.name} Throws a Master Ball at {opp_pokemon}!")
     period = "."
     for _ in range(5):
         print(period)
@@ -112,21 +124,28 @@ def catch_pokemon(trainer):
     # Create 50/50 chance of catching Pokemon
     catch_probability = random.random()
     if catch_probability > 0.5:
-        print(f"{new_pokemon.name} has been caught!!!")
+        print(f"Congratulations! {new_pokemon.name} Has Been Caught!!!")
         trainer_profile(trainer)
     else:
-        print(f"Oh no! {new_pokemon.name} broke free and ran away!")
+        print(f"Oh no! {new_pokemon.name} Broken Free And Ran Away!")
         new_pokemon.delete()
         trainer_profile(trainer)
 
+
+# COMPLETE
+# Deletes Trainer's Selected Pokemon
 def delete_trainer_pokemon(trainer):
     from cli import trainer_profile
 
-    target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
-    for pokemon in trainer.pokemon():
-        if pokemon.name.lower() == target_pokemon.lower():
-            pokemon.delete()
-            print(f"Released {pokemon.name} Back To The Wild!")
+    # Ensures Trainers can't delete their only Pokemon
+    if len(trainer.pokemon()) == 1:
+        print(f"Trainers Must Have At Least 1 Pokemon In Their Roster.")
+    else:
+        target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
+        for pokemon in trainer.pokemon():
+            if pokemon.name.lower() == target_pokemon.lower():
+                pokemon.delete()
+                print(f"Released {pokemon.name} Back To The Wild!")
     
     trainer_profile(trainer)
 
