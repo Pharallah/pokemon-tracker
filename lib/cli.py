@@ -9,7 +9,8 @@ from helpers import (
     trainer_instance,
     update_trainer_name,
     return_current_trainer,
-    catch_pokemon
+    catch_pokemon,
+    delete_trainer_pokemon
 )
 
 def main_page():
@@ -96,6 +97,7 @@ def trainer_page(trainer):
     print("                  Please choose from the following:                  ")
     print("                  Press u to Update Trainer's Name                   ")
     print("                  Press c to Go Catch Pokemon!                       ")
+    print("                  Press r to Release A Pokemon!                       ")
     print("                  Press b to Go Back                                 ")
     print("                  Press e to Exit                                    ")
     print("---------------------------------------------------------------------")
@@ -114,6 +116,8 @@ def trainer_profile(trainer):
             update_trainer_name()
         elif choice == "c":
             trainer_battle_selector()
+        elif choice == "r":
+            delete_trainer_pokemon(trainer)
         elif choice == "d":
             delete_trainer()
             trainers_main()

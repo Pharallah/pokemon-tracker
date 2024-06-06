@@ -10,12 +10,6 @@ current_trainer = []
 def return_current_trainer():
     return current_trainer[0]
 
-def random_pokemon():
-    randomized_pokemon = random.choice(pokemon_list())
-    return randomized_pokemon
-    # generate random pokemon to be created
-    # return it to 
-
 # COMPLETE
 def view_all_trainers():
     trainers = Trainer.get_all()
@@ -79,12 +73,15 @@ def trainer_instance():
                 current_trainer.append(trainer)
                 return trainer
 
+def random_pokemon():
+    randomized_pokemon = random.choice(pokemon_list())
+    return randomized_pokemon
+
 def catch_pokemon(trainer):
     from cli import trainer_profile
     wild_pokemon = random_pokemon()
     current_pokemon = []
     
-
     # Randomly generate a wild pokemon
     if wild_pokemon not in trainer.pokemon():
         new_pokemon = Pokemon.create(wild_pokemon[0], wild_pokemon[1], trainer.id)
@@ -121,6 +118,18 @@ def catch_pokemon(trainer):
         print(f"Oh no! {new_pokemon.name} broke free and ran away!")
         new_pokemon.delete()
         trainer_profile(trainer)
+
+def delete_trainer_pokemon(trainer):
+    from cli import trainer_profile
+
+    target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
+    for pokemon in trainer.pokemon():
+        if pokemon.name.lower() == target_pokemon.lower():
+            pokemon.delete()
+            print(f"Released {pokemon.name} Back To The Wild!")
+    
+    trainer_profile(trainer)
+
 
 def exit_program():
     print("Thank you for playing!")
