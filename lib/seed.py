@@ -1,4 +1,3 @@
-from models.__init__ import CONN, CURSOR
 from models.trainer import Trainer
 from models.pokemon import Pokemon
 

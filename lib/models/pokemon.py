@@ -34,7 +34,7 @@ class Pokemon:
         if pokemon_type in valid_types:
             self._pokemon_type = pokemon_type
         else:
-            raise ValueError("Please enter valid Pokemon Type: Fire, Water, or Grass")
+            raise ValueError("Please enter valid Pokemon Type: Fire, Water, Electric, or Grass")
 
     @property
     def trainer_id(self):
