@@ -77,8 +77,10 @@ def trainer_instance():
     lowered_trainers = [trainer.name.lower() for trainer in all_trainers]
 
     if name.lower() not in lowered_trainers:
-        print("Please Enter Valid Trainer Name: ")
+        print("Please Enter Valid Trainer Name")
+        trainer_instance()
     else:
+        clear_cli()
         for trainer in all_trainers:
             if trainer.name.lower() == name.lower():
                 current_trainer.clear()
@@ -123,7 +125,7 @@ def catch_pokemon(trainer):
 
     # Create 50/50 chance of catching Pokemon
     catch_probability = random.random()
-    if catch_probability > 0.5:
+    if catch_probability > 0.3:
         print(f"Congratulations! {new_pokemon.name} Has Been Caught!!!")
         trainer_profile(trainer)
     else:
@@ -135,14 +137,17 @@ def delete_trainer_pokemon(trainer):
     from cli import trainer_profile
     # Ensures Trainers can't delete their only Pokemon
     if len(trainer.pokemon()) == 1:
+        clear_cli()
         print(f"Trainers Must Have At Least 1 Pokemon In Their Roster.")
+        trainer_profile(trainer)
     else:
         target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
+        clear_cli()
         for pokemon in trainer.pokemon():
             if pokemon.name.lower() == target_pokemon.lower():
                 pokemon.delete()
                 print(f"Released {pokemon.name} Back To The Wild!")
-    clear_cli()
+    
     trainer_profile(trainer)
 
 def exit_program():

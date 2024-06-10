@@ -111,7 +111,7 @@ def trainer_page(trainer):
 
 def trainer_selector():
     trainer = trainer_instance()
-    clear_cli()
+    # clear_cli()
     trainer_profile(trainer)
 
 def trainer_profile(trainer):
@@ -126,7 +126,6 @@ def trainer_profile(trainer):
         elif choice == "c":
             trainer_battle_selector()
         elif choice == "r":
-            # clear_cli()
             delete_trainer_pokemon(trainer)
         elif choice == "d":
             delete_trainer()
