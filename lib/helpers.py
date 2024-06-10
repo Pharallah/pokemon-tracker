@@ -107,6 +107,7 @@ def catch_pokemon(trainer):
     opp_pokemon = current_pokemon[0].name
 
     clear_cli()
+    
     # Battle Scene Dialogue
     print(f"Battle With A Wild {opp_pokemon} Has Started!!!")
     time.sleep(2)
@@ -116,7 +117,8 @@ def catch_pokemon(trainer):
     time.sleep(2)
     print(f"{fighting_pokemon} Attacks Back And Landed A Critical Hit!")
     time.sleep(2)
-    print(f"Trainer {trainer.name} Throws A Master Ball At {opp_pokemon}!")
+    print(f"Trainer {trainer.name} Throws A Pokéball Ball At {opp_pokemon}!")
+    
     period = "."
     for _ in range(5):
         print(period)
