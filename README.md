@@ -8,7 +8,7 @@ The Pokémon Trainer CLI Application is a text-based simulation game where users
 
 - **Trainer Management**: Create and manage Pokémon trainers.
 - **Catch Wild Pokémon**: Encounter and attempt to catch wild Pokémon with a 70/30 chance of success.
-- **Battle Simulation**: Engage in simulated battles with a randomly generated Pokémon from the Wild using a random Pokémon from the Trainer's roster.
+- **Battle Simulation**: Engage in simulated battles with a randomly generated Pokémon from the Wild using a random Pokémon from the Trainer's Pokémon roster.
 - **Suspenseful Catching Animation**: Experience a suspenseful animation when attempting to catch a wild Pokémon.
 
 ## Installation/Setup
