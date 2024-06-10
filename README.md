@@ -29,9 +29,10 @@ def catch_pokemon(trainer):
         current_pokemon.clear()
         current_pokemon.append(new_pokemon)
     
-    # Avoids the new pokemon from being chosen to fight itself
-    # Choose random pokemon from filtered roster to fight
+    # Filter avoids the new pokemon from being chosen to fight itself
     filtered_roster = [p for p in trainer.pokemon() if p != current_pokemon[0]]
+    
+    # Choose random pokemon from filtered roster to fight
     fighting_pokemon = random.choice(filtered_roster).name
     opp_pokemon = current_pokemon[0].name
     
