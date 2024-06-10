@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Pokémon Trainer CLI Application is a text-based simulation game where users can interact with a command-line interface (CLI) to manage their Pokémon trainer profiles, catch wild Pokémon, and engage in simulated battles. The game uses a one-to-many relationship between Trainers and Pokémon, where each trainer can have multiple Pokémon, but each Pokémon belongs to only one trainer.
+The Pokémon Trainer CLI Application is a text-based simulation game where users can interact with a command-line interface (CLI) to manage their Pokémon trainer profiles, catch wild Pokémon, and engage in simulated battles. The game explores the one-to-many relationship between Trainers and Pokémon, where each trainer can have multiple Pokémon, but each Pokémon belongs to only one trainer.
 
 ## Features
 
