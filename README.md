@@ -12,7 +12,9 @@ The Pokémon Trainer CLI Application is a text-based simulation game where users
 - **Suspenseful Catching Animation**: Experience a suspenseful animation when attempting to catch a wild Pokémon.
 
 ## Example Function
+
 `catch_pokemon()`
+
 Simulates an encounter with a wild Pokémon, where the trainer can attempt to catch it. If successful, the Pokémon is added to the trainer's roster. If not, the Pokémon runs away.
 
 ```python
