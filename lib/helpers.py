@@ -123,7 +123,7 @@ def catch_pokemon(trainer):
         period += "."
         time.sleep(1)
 
-    # Create 50/50 chance of catching Pokemon
+    # Create 70% chance of catching the wild Pokemon
     catch_probability = random.random()
     if catch_probability > 0.3:
         print(f"Congratulations! {new_pokemon.name} Has Been Caught!!!")
