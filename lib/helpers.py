@@ -102,19 +102,18 @@ def catch_pokemon(trainer):
     # Avoids the new pokemon from being chosen to fight itself
     # Choose random pokemon from filtered roster to fight
     filtered_roster = [p for p in trainer.pokemon() if p != current_pokemon[0]]
-    fighting_pokemon = random.choice(filtered_roster)
+    fighting_pokemon = random.choice(filtered_roster).name
     opp_pokemon = current_pokemon[0].name
-    trainers_chosen_pokemon = fighting_pokemon.name
-
+    
     clear_cli()
     # Battle Scene Dialogue
     print(f"Battle With A Wild {opp_pokemon} Has Started!!!")
     time.sleep(2)
-    print(f"Trainer {trainer.name} Chooses {trainers_chosen_pokemon} To Fight {opp_pokemon}!!!")
+    print(f"Trainer {trainer.name} Chooses {fighting_pokemon} To Fight {opp_pokemon}!!!")
     time.sleep(2)
     print(f"{opp_pokemon} Attacks!!!")
     time.sleep(2)
-    print(f"{trainers_chosen_pokemon} Attacks Back And Landed A Critical Hit!")
+    print(f"{fighting_pokemon} Attacks Back And Landed A Critical Hit!")
     time.sleep(2)
     print(f"Trainer {trainer.name} Throws A Master Ball At {opp_pokemon}!")
     period = "."
