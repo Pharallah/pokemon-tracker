@@ -81,6 +81,18 @@ Run the following code to start the CLI application:
 python lib/cli.py
 ```
 
+## Ideas for Improvement
+
+1. Pokémon Leveling System: Implement a leveling system for Pokémon that allows them to gain experience points and level up after battles.
+
+2. Battle Mechanics: Add more detailed battle mechanics, such as different types of attacks, special abilities, and health points (HP) for Pokémon.
+
+3. Trainer Customization: Allow users to customize their trainers with different attributes and items.
+
+4. Pokédex Feature: Implement a Pokédex that keeps track of all the Pokémon a trainer has encountered and caught.
+
+5. Multiplayer Mode: Develop a multiplayer mode where trainers can battle against each other over a network.
+
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request for review.
 
