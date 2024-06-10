@@ -4,13 +4,13 @@ from helpers import (
     exit_program,
     create_trainer,
     view_all_trainers,
-    # view_all_pokemon,
     delete_trainer,
     trainer_instance,
     update_trainer_name,
     return_current_trainer,
     catch_pokemon,
-    delete_trainer_pokemon
+    delete_trainer_pokemon,
+    clear_cli
 )
 
 def main_page():
@@ -32,17 +32,20 @@ def main_page():
     print("*********************************************************************")
     print("*                 Please choose from the following:                 *")
     print("*********************************************************************")
-    print("|                  Press v to View Team Red's Roster                |")
+    print("|                  Press v to View Team's Tracker                   |")
     print("|                  Press e to Exit App                              |")
     print("---------------------------------------------------------------------")
 
 def main():
+    clear_cli()
     while True:
         main_page()
         choice = input("> ")
         if choice == "e":
+            clear_cli()
             exit_program()
         elif choice == "v":
+            clear_cli()
             trainers_main()
         else:
             print("Invalid choice")
@@ -66,19 +69,22 @@ def trainers_main():
     while True:
         choice = input("> ")
         if choice == "b":
+            clear_cli()
             main()
         elif choice == "a":
             create_trainer()
+            trainers_main()
         elif choice == "v":
             trainer_selector()
         elif choice == "d":
             delete_trainer()
             trainers_main()
         elif choice == "e":
-            exit()
+            clear_cli()
+            exit_program()
         else:
-            print("Invalid choice, try again")
             trainers_main()
+            print("Invalid choice, try again")
 
 
 def trainer_page(trainer):
@@ -105,6 +111,7 @@ def trainer_page(trainer):
 
 def trainer_selector():
     trainer = trainer_instance()
+    clear_cli()
     trainer_profile(trainer)
 
 def trainer_profile(trainer):
@@ -112,23 +119,27 @@ def trainer_profile(trainer):
     while True:
         choice = input("> ")
         if choice == "b":
+            clear_cli()
             trainers_main()
         elif choice == "u":
             update_trainer_name()
         elif choice == "c":
             trainer_battle_selector()
         elif choice == "r":
+            # clear_cli()
             delete_trainer_pokemon(trainer)
         elif choice == "d":
             delete_trainer()
             trainers_main()
         elif choice == "v":
+            clear_cli()
             view_all_pokemon(trainer)
         elif choice == "e":
-            exit()
+            clear_cli()
+            exit_program()
         else:
             print("Invalid choice, try again")
-            trainers_main()
+            trainer_profile(trainer)
 
 def view_trainer_pokemon(trainer):
     print("*********************************************************************")
@@ -138,9 +149,9 @@ def view_trainer_pokemon(trainer):
         num = 1
         for index, pokemon in enumerate(trainer.pokemon(), start=1):
             print(f"                  Pokemon #{num}                            ")
-            print(f"                  Name: {pokemon.name}                      ")
-            print(f"                  Type: {pokemon.pokemon_type}              ")
-            print(f"                  Trainer: {trainer.name}                 \n")
+            print(f"                     Name: {pokemon.name}                   ")
+            print(f"                     Type: {pokemon.pokemon_type}           ")
+            print(f"                     Trainer: {trainer.name}                ")
             num += 1
     print("*********************************************************************")
     print("                  Please choose from the following:                  ")
@@ -150,18 +161,19 @@ def view_trainer_pokemon(trainer):
     print("---------------------------------------------------------------------")
 
 def view_all_pokemon(trainer):
+    clear_cli()
     view_trainer_pokemon(trainer)
     while True:
         choice = input("> ")
         if choice == "b":
+            clear_cli()
             trainer_profile(trainer)
         elif choice == "e":
+            clear_cli()
             exit_program()
         else:
             print("Invalid choice, try again")
             trainer_profile(trainer)
-
-
 
 def battle_cli(trainer):
     print("*********************************************************************")
@@ -183,9 +195,10 @@ def battle_cli(trainer):
     print("---------------------------------------------------------------------")
 
 def trainer_battle_selector():
+    clear_cli()
     trainer = return_current_trainer()
     if len(trainer.pokemon()) >= 6:
-        print(f"{trainer.name}'s Roster is Full!\nRelease a Pokemon From Roster Before Catching Anymore!")
+        print(f"Max Roster Capacity Reached!\nRelease a Pokemon From Roster Before Catching Anymore!")
         trainer_profile(trainer)
     else:
         battle_profile(trainer)
@@ -197,6 +210,7 @@ def battle_profile(trainer):
         if choice == "1" or choice == "Fight" or choice == "fight":
             catch_pokemon(trainer)
         elif choice == "2" or choice == "Run" or choice == "run":
+            clear_cli()
             print(f"{trainer.name} got away from the wild Pokemon!")
             trainer_profile(trainer)
         else:

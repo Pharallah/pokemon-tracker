@@ -1,12 +1,9 @@
 def pokemon_list():
     return [
-    ["Charmander", "Fire", 0],
     ["Charmeleon", "Fire", 0],
     ["Charizard", "Fire", 0],
-    ["Squirtle", "Water", 0],
     ["Wartortle", "Water", 0],
     ["Blastoise", "Water", 0],
-    ["Pikachu", "Electric", 0],
     ["Raichu", "Electric", 0],
     ["Vulpix", "Fire", 0],
     ["Ninetales", "Fire", 0],
@@ -43,7 +40,6 @@ def pokemon_list():
     ["Flareon", "Fire", 0],
     ["Omanyte", "Water", 0],
     ["Omastar", "Water", 0],
-    ["Bulbasaur", "Grass", 0],
     ["Ivysaur", "Grass", 0],
     ["Venusaur", "Grass", 0],
     ["Oddish", "Grass", 0],
