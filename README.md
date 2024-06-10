@@ -80,6 +80,8 @@ Run the following code to start the CLI application:
 ```sh
 python lib/cli.py
 ```
+## Contributing
+Contributions are welcome! Please fork the repository and submit a pull request for review.
 
 ## Ideas for Improvement
 
@@ -92,9 +94,6 @@ python lib/cli.py
 4. Pokédex Feature: Implement a Pokédex that keeps track of all the Pokémon a trainer has encountered and caught.
 
 5. Multiplayer Mode: Develop a multiplayer mode where trainers can battle against each other over a network.
-
-## Contributing
-Contributions are welcome! Please fork the repository and submit a pull request for review.
 
 ## Contact
 For any questions or feedback, please contact harrycsanjuan@gmail.com
