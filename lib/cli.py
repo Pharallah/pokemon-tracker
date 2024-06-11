@@ -37,7 +37,6 @@ def main_page():
     print("---------------------------------------------------------------------")
 
 def main():
-    clear_cli()
     while True:
         main_page()
         choice = input("> ")
@@ -48,7 +47,10 @@ def main():
             clear_cli()
             trainers_main()
         else:
+            clear_cli()
             print("Invalid choice")
+            main()
+            
 
 def trainers_menu():
     print("*********************************************************************")
