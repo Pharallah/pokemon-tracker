@@ -142,7 +142,7 @@ def delete_trainer_pokemon(trainer):
     # Ensures Trainers can't delete their only Pokemon
     if len(trainer.pokemon()) == 1:
         clear_cli()
-        print(f"Trainers Must Have At Least 1 Pokemon In Their Roster.")
+        print(f"Trainers Must Have At Least 1 Pokemon In Their Roster To Fight With!")
         trainer_profile(trainer)
     else:
         target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
