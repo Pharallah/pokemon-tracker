@@ -25,19 +25,37 @@ def view_all_trainers():
         print(f"                  {index}. {trainer.name}")
 
 def create_trainer():
+    from cli import trainers_menu
     name = input("Enter Your New Trainer's Name: ")
     fresh_pokemon = random_pokemon()
 
     clear_cli()
 
-    if isinstance(name, str) and 15 >= len(name) >= 5:
-        new_trainer = Trainer.create(name.title())
-        new_pokemon = Pokemon.create(fresh_pokemon[0], fresh_pokemon[1], new_trainer.id)
-        print(f"{name.title()} Has Joined The Team!")
-        print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {new_pokemon.name}")
-    else:
-        print("Please Enter A Name Between 5 And 15 Characters Long: ")
+    # Filter thru all Trainers 
+    trainer_list = [trainer.name.lower() for trainer in Trainer.get_all() if name.lower() == trainer.name.lower()]
+
+    # breakpoint()
+    if name.lower() in trainer_list:
+        print("That Trainer Name Already Exists, Please Try Again.")
+        trainers_menu()
         create_trainer()
+    else:
+        if isinstance(name, str) and 15 >= len(name) >= 5:
+            new_trainer = Trainer.create(name.title())
+            new_pokemon = Pokemon.create(fresh_pokemon[0], fresh_pokemon[1], new_trainer.id)
+            
+            clear_cli()
+
+            print(f"{name.title()} Has Joined The Team!")
+            print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {new_pokemon.name}")
+        else:
+            clear_cli()
+            print("Please Enter A Name Between 5 And 15 Characters Long: ")
+            trainers_menu()
+            create_trainer()
+        # breakpoint()
+
+    
 
 def delete_trainer():
     name = input("Enter Trainer's Name to Delete: ")
@@ -77,7 +95,7 @@ def trainer_instance():
     lowered_trainers = [trainer.name.lower() for trainer in all_trainers]
 
     if name.lower() not in lowered_trainers:
-        print("Please Enter Valid Trainer Name")
+        print("Please Enter Valid Trainer Name. Name must be between 5 and 15 characters long.")
         trainer_instance()
     else:
         clear_cli()

@@ -85,8 +85,10 @@ def trainers_main():
             clear_cli()
             exit_program()
         else:
-            trainers_main()
+            clear_cli()
             print("Invalid choice, try again")
+            trainers_main()
+            
 
 
 def trainer_page(trainer):
@@ -139,6 +141,7 @@ def trainer_profile(trainer):
             clear_cli()
             exit_program()
         else:
+            clear_cli()
             print("Invalid choice, try again")
             trainer_profile(trainer)
 
@@ -173,6 +176,7 @@ def view_all_pokemon(trainer):
             clear_cli()
             exit_program()
         else:
+            clear_cli()
             print("Invalid choice, try again")
             trainer_profile(trainer)
 
@@ -215,6 +219,7 @@ def battle_profile(trainer):
             print(f"{trainer.name} got away from the wild Pokemon!")
             trainer_profile(trainer)
         else:
+            clear_cli()
             print("Invalid choice, try again")
             trainer_profile(trainer)
 
