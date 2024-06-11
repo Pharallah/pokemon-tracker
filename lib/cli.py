@@ -48,7 +48,7 @@ def main():
             trainers_main()
         else:
             clear_cli()
-            print("Invalid choice")
+            print("Invalid Choice, Please choose from the following options.")
             main()
             
 

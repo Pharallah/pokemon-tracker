@@ -128,9 +128,11 @@ def catch_pokemon(trainer):
     # Create 70% chance of catching the wild Pokemon
     catch_probability = random.random()
     if catch_probability > 0.3:
+        clear_cli()
         print(f"Congratulations! {new_pokemon.name} Has Been Caught!!!")
         trainer_profile(trainer)
     else:
+        clear_cli()
         print(f"Oh no! {new_pokemon.name} Broke Free And Ran Away!")
         new_pokemon.delete()
         trainer_profile(trainer)
