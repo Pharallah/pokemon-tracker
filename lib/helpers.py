@@ -1,7 +1,6 @@
 # lib/helpers.py
 from models.trainer import Trainer
 from models.pokemon import Pokemon
-from pokemon_list import pokemon_list
 import random
 import time
 import os

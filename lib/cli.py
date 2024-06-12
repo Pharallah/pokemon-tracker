@@ -77,14 +77,15 @@ def all_pokemon_page(all_trainers, all_pokemon):
     print(f"                             POKÉDEX                                ")
     print("*********************************************************************")
     if len(all_pokemon) > 0:
+        # Create a dictionary mapping trainer IDs to trainer names
+        trainer_dict = {trainer.id: trainer.name for trainer in all_trainers}
+
+        # Iterate through the Pokémon and print the corresponding trainer if found
         for index, pokemon in enumerate(all_pokemon, start=1):
-            found_trainer = False
-            for trainer in all_trainers:
-                if trainer.id == pokemon.trainer_id:
-                    print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer.name}")
-                    found_trainer = True
-                    break  # Exit the inner loop once the trainer is found
-            if not found_trainer:
+            trainer_name = trainer_dict.get(pokemon.trainer_id)
+            if trainer_name:
+                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer_name}")
+            else:
                 print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Uncaught")
     else:
         print(f"             No Pokémon Found In The Wild.            ")
