@@ -1,5 +1,6 @@
 from models.trainer import Trainer
 from models.pokemon import Pokemon
+from pokemon_list import pokemon_list
 
 def seed_database():
     Trainer.drop_table()
@@ -15,6 +16,8 @@ def seed_database():
     bulbasaur = Pokemon.create("Bulbasaur", "Grass", 2)
     squirtle = Pokemon.create("Squirtle", "Water", 2)
 
+    for monster in pokemon_list():
+        Pokemon.create(monster[0], monster[1], 0)
 
 seed_database()
 print("Seeded!")

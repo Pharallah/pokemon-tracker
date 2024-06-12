@@ -13,7 +13,8 @@ def clear_cli():
 
 # Random Pokemon generator from pokemon_list
 def random_pokemon():
-    randomized_pokemon = random.choice(pokemon_list())
+    uncaught_pokemon = [pokemon for pokemon in Pokemon.get_all() if pokemon.trainer_id == 0]
+    randomized_pokemon = random.choice(uncaught_pokemon)
     return randomized_pokemon
 
 def return_current_trainer():
@@ -27,7 +28,7 @@ def view_all_trainers():
 def create_trainer():
     from cli import trainers_menu
     name = input("Enter Your New Trainer's Name: ")
-    fresh_pokemon = random_pokemon()
+    uncaught_pokemon = random_pokemon()
 
     clear_cli()
 
@@ -42,12 +43,13 @@ def create_trainer():
     else:
         if isinstance(name, str) and 15 >= len(name) >= 5:
             new_trainer = Trainer.create(name.title())
-            new_pokemon = Pokemon.create(fresh_pokemon[0], fresh_pokemon[1], new_trainer.id)
-            
+            uncaught_pokemon.trainer_id = new_trainer.id
+            uncaught_pokemon.update()
+
             clear_cli()
 
             print(f"{name.title()} Has Joined The Team!")
-            print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {new_pokemon.name}")
+            print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {uncaught_pokemon.name}")
         else:
             clear_cli()
             print("Please Enter A Name Between 5 And 15 Characters Long: ")
@@ -58,12 +60,15 @@ def create_trainer():
     
 
 def delete_trainer():
+    from cli import trainers_main
+    
     name = input("Enter Trainer's Name to Delete: ")
     trainers = Trainer.get_all()
     lowered_trainers = [trainer.name.lower() for trainer in trainers]
 
     if name.lower() not in lowered_trainers:
         print("Please Enter Valid Trainer Name. ")
+        trainers_main()
     else:
         for trainer in trainers:
             if trainer.name.lower() == name.lower():
@@ -71,6 +76,11 @@ def delete_trainer():
                 for pokemon in trainer.pokemon():
                     pokemon.delete()
                 trainer.delete()
+            else:
+                clear_cli()
+                print("No Trainer Found By That Name.")
+                trainers_main()
+
         clear_cli()
         print(f"Trainer {trainer.name} Has Left The Team!")
 
@@ -108,14 +118,16 @@ def trainer_instance():
 
 def catch_pokemon(trainer):
     from cli import trainer_profile
-    wild_pokemon = random_pokemon()
     current_pokemon = []
+    wild_pokemon = random_pokemon()
     
-    # Randomly generate a new wild pokemon not already in Trainer's roster
+    
+    # Ensures wild_pokemon not already in Trainer's Roster
     if wild_pokemon not in trainer.pokemon():
-        new_pokemon = Pokemon.create(wild_pokemon[0], wild_pokemon[1], trainer.id)
+        wild_pokemon.trainer_id = trainer.id
+        wild_pokemon.update()
         current_pokemon.clear()
-        current_pokemon.append(new_pokemon)
+        current_pokemon.append(wild_pokemon)
     
     # Filter avoids the new pokemon from being chosen to fight itself
     filtered_roster = [p for p in trainer.pokemon() if p != current_pokemon[0]]
@@ -147,12 +159,13 @@ def catch_pokemon(trainer):
     catch_probability = random.random()
     if catch_probability > 0.3:
         clear_cli()
-        print(f"Congratulations! {new_pokemon.name} Has Been Caught!!!")
+        print(f"Congratulations! {wild_pokemon.name} Has Been Caught!!!")
         trainer_profile(trainer)
     else:
         clear_cli()
-        print(f"Oh no! {new_pokemon.name} Broke Free And Ran Away!")
-        new_pokemon.delete()
+        print(f"Oh no! {wild_pokemon.name} Broke Free And Ran Away!")
+        wild_pokemon.trainer_id = 0
+        wild_pokemon.delete()
         trainer_profile(trainer)
 
 def delete_trainer_pokemon(trainer):
@@ -164,13 +177,63 @@ def delete_trainer_pokemon(trainer):
         trainer_profile(trainer)
     else:
         target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
+        
         clear_cli()
-        for pokemon in trainer.pokemon():
-            if pokemon.name.lower() == target_pokemon.lower():
-                pokemon.delete()
-                print(f"Released {pokemon.name} Back To The Wild!")
+        
+        trainers_pokemon = [p.name.lower() for p in trainer.pokemon()]
+
+        if target_pokemon.lower() in trainers_pokemon:
+            for pokemon in trainer.pokemon():
+                if pokemon.name.lower() == target_pokemon.lower():
+                    pokemon.trainer_id = 0
+                    pokemon.update()
+                    print(f"Released {pokemon.name} Back To The Wild!")
+        else:
+            print(f"No Pokemon By That Name Found. Please Try Again.")
+        
+        trainer_profile(trainer)
     
     trainer_profile(trainer)
+
+def create_pokemon():
+    from cli import main_page, main
+    main_page()
+    valid_types = ["Fire", "Water", "Grass", "Electric"]
+
+    name = input("Enter New Pokemon Name: ").title()
+    
+    clear_cli()
+    main_page()
+    
+    # Ensures New Pokemon doesn't already exist in DB
+    matching_pokemon = [existing_pokemon for existing_pokemon in Pokemon.get_all() if existing_pokemon.name == name]
+
+    if len(matching_pokemon) == 0:
+        pokemon_type = input("Fire | Water | Electric | Grass\nChoose Your New Pokemon's Type From Above: ").title()
+        if pokemon_type in valid_types:
+            if 3 <= len(name) <= 10:
+                clear_cli()
+                new_pokemon = Pokemon.create(name, pokemon_type, 0)
+                print(f"Congratulations! {new_pokemon.name} Has Been Created And Released To The Wild!")
+                main()
+            else:
+                clear_cli()
+                print("Invalid Entry. Pokemon Name Must Be Between 3 And 10 Characters Long")
+                create_pokemon()
+        else:
+            clear_cli()
+            print("Invalid Pokemon Type. Please Try Again.")
+            create_pokemon()
+    else:
+        clear_cli()
+        print(f"A Pokemon With That Name Already Exists In The Wild. Please Create A Unique Pokemon.")
+        create_pokemon()
+
+    
+
+    
+
+    
 
 def exit_program():
     print("Thank You For Playing!")

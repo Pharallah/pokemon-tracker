@@ -6,7 +6,7 @@ class Pokemon:
     
     all = {}
 
-    def __init__(self, name, pokemon_type, trainer_id, id=None):
+    def __init__(self, name, pokemon_type, trainer_id=0, id=None):
         self.id = id
         self.name = name
         self.pokemon_type = pokemon_type
@@ -42,10 +42,10 @@ class Pokemon:
 
     @trainer_id.setter
     def trainer_id(self, id):
-        if type(id) is int and Trainer.find_by_id(id):
+        if isinstance(id, int):
             self._trainer_id = id
         else:
-            raise ValueError("Trainer ID must reference a trainer in the database")
+            raise ValueError("Trainer ID must be an integer")
     
     @classmethod
     def create_table(cls):

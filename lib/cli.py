@@ -10,7 +10,8 @@ from helpers import (
     return_current_trainer,
     catch_pokemon,
     delete_trainer_pokemon,
-    clear_cli
+    clear_cli,
+    create_pokemon
 )
 
 def main_page():
@@ -33,6 +34,8 @@ def main_page():
     print("*                 Please choose from the following:                 *")
     print("*********************************************************************")
     print("|                  Press v to View Team's Tracker                   |")
+    print("|                  Press c to Create New Pokemon                    |")
+    print("|                  Press p to view PokéDex                          |")
     print("|                  Press e to Exit App                              |")
     print("---------------------------------------------------------------------")
 
@@ -46,11 +49,64 @@ def main():
         elif choice == "v":
             clear_cli()
             trainers_main()
+        elif choice == "c":
+            clear_cli()
+            create_pokemon()
+        elif choice == "p":
+            clear_cli()
+            all_pokemon()
+            pass
         else:
             clear_cli()
             print("Invalid Choice, Please choose from the following options.")
             main()
-            
+
+def all_pokemon():
+    from models.pokemon import Trainer, Pokemon
+    
+    all_trainers = Trainer.get_all()
+    all_pokemon = Pokemon.get_all()
+    
+    all_pokemon_menu(all_trainers, all_pokemon)
+
+def all_pokemon_page(all_trainers, all_pokemon):
+    print("*********************************************************************")
+    print(f"                             POKÉDEX                                ")
+    print("*********************************************************************")
+    if len(all_pokemon) > 0:
+        for index, pokemon in enumerate(all_pokemon, start=1):
+            found_trainer = False
+            for trainer in all_trainers:
+                if trainer.id == pokemon.trainer_id:
+                    print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer.name}")
+                    found_trainer = True
+                    break  # Exit the loop once the trainer is found
+            if not found_trainer:
+                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Uncaught")
+    else:
+        print(f"             No Pokémon Found In The Wild.            ")
+    print("*********************************************************************")
+    print("                  Please choose from the following:                  ")
+    print("*********************************************************************")
+    print("                  Press b to Go Back                                 ")
+    print("                  Press e to Exit App                                ")
+    print("---------------------------------------------------------------------")     
+
+def all_pokemon_menu(all_trainers, all_pokemon):
+    clear_cli()
+    while True:
+        all_pokemon_page(all_trainers, all_pokemon)
+        choice = input("> ")
+        if choice == "e":
+            clear_cli()
+            exit_program()
+        elif choice == "b":
+            clear_cli()
+            main()
+        else:
+            clear_cli()
+            print("Invalid Choice, Please choose from the following options.")
+            all_pokemon_menu(all_trainers, all_pokemon)
 
 def trainers_menu():
     print("*********************************************************************")
@@ -115,7 +171,6 @@ def trainer_page(trainer):
 
 def trainer_selector():
     trainer = trainer_instance()
-    # clear_cli()
     trainer_profile(trainer)
 
 def trainer_profile(trainer):
