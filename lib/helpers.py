@@ -229,11 +229,23 @@ def create_pokemon():
         print(f"A Pokemon With That Name Already Exists In The Wild. Please Create A Unique Pokemon.")
         create_pokemon()
 
+def delete_pokemon(all_trainers, all_pokemon):
+    from cli import all_pokemon_page, all_pokemon_menu
+    all_pokemon_page(all_trainers, all_pokemon)
     
-
+    pokemon_name = input("Enter Pokémon Name To Delete: ").lower()
+    pokemon_list = [pokemon for pokemon in all_pokemon if pokemon_name == pokemon.name.lower()]
     
-
-    
+    if len(pokemon_list) > 0:
+        pokemon_list[0].delete()
+        _all_pokemon = Pokemon.get_all()
+        clear_cli()
+        print(f"{pokemon_list[0].name.title()} Has Been Deleted!")
+        all_pokemon_menu(all_trainers, _all_pokemon)
+    else:
+        clear_cli()                          
+        print(f"Pokémon Name Not Found In The Wild")
+        delete_pokemon(all_trainers, all_pokemon)
 
 def exit_program():
     print("Thank You For Playing!")

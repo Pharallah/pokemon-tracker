@@ -11,7 +11,8 @@ from helpers import (
     catch_pokemon,
     delete_trainer_pokemon,
     clear_cli,
-    create_pokemon
+    create_pokemon,
+    delete_pokemon
 )
 
 def main_page():
@@ -35,7 +36,7 @@ def main_page():
     print("*********************************************************************")
     print("|                  Press v to View Team's Tracker                   |")
     print("|                  Press c to Create New Pokemon                    |")
-    print("|                  Press p to view PokéDex                          |")
+    print("|                  Press p to View PokéDex                          |")
     print("|                  Press e to Exit App                              |")
     print("---------------------------------------------------------------------")
 
@@ -67,6 +68,8 @@ def all_pokemon():
     all_trainers = Trainer.get_all()
     all_pokemon = Pokemon.get_all()
     
+    clear_cli()
+    
     all_pokemon_menu(all_trainers, all_pokemon)
 
 def all_pokemon_page(all_trainers, all_pokemon):
@@ -80,7 +83,7 @@ def all_pokemon_page(all_trainers, all_pokemon):
                 if trainer.id == pokemon.trainer_id:
                     print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer.name}")
                     found_trainer = True
-                    break  # Exit the loop once the trainer is found
+                    break  # Exit the inner loop once the trainer is found
             if not found_trainer:
                 print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Uncaught")
     else:
@@ -88,18 +91,21 @@ def all_pokemon_page(all_trainers, all_pokemon):
     print("*********************************************************************")
     print("                  Please choose from the following:                  ")
     print("*********************************************************************")
+    print("                  Press d to Delete a Pokémon                        ")
     print("                  Press b to Go Back                                 ")
     print("                  Press e to Exit App                                ")
     print("---------------------------------------------------------------------")     
 
 def all_pokemon_menu(all_trainers, all_pokemon):
-    clear_cli()
     while True:
         all_pokemon_page(all_trainers, all_pokemon)
         choice = input("> ")
         if choice == "e":
             clear_cli()
             exit_program()
+        elif choice == "d":
+            clear_cli()
+            delete_pokemon(all_trainers, all_pokemon)
         elif choice == "b":
             clear_cli()
             main()
