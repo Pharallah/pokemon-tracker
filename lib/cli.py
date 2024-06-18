@@ -79,7 +79,6 @@ def all_pokemon_page(all_trainers, all_pokemon):
     if len(all_pokemon) > 0:
         # Create a dictionary mapping trainer IDs to trainer names
         trainer_dict = {trainer.id: trainer.name for trainer in all_trainers}
-
         # Iterate through the Pokémon and print the corresponding trainer if found
         for index, pokemon in enumerate(all_pokemon, start=1):
             trainer_name = trainer_dict.get(pokemon.trainer_id)
@@ -188,7 +187,7 @@ def trainer_profile(trainer):
             clear_cli()
             trainers_main()
         elif choice == "u":
-            update_trainer_name()
+            update_trainer_name(trainer)
         elif choice == "c":
             trainer_battle_selector()
         elif choice == "r":

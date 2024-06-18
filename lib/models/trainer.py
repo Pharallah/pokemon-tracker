@@ -14,10 +14,10 @@ class Trainer:
     
     @name.setter
     def name(self, name):
-        if isinstance(name, str) and len(name):
+        if isinstance(name, str) and 15 >= len(name) >= 5:
             self._name = name
         else:
-            raise ValueError("Name must be a non-empty string")
+            raise ValueError("Please Enter A Name Between 5 And 15 Characters Long.")
 
     @classmethod
     def create_table(cls):

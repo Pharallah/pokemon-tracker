@@ -8,7 +8,7 @@ import os
 current_trainer = []
 
 def clear_cli():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system('cls' if os.name == 't' else 'clear')
 
 # Random Pokemon generator from pokemon_list
 def random_pokemon():
@@ -26,21 +26,21 @@ def view_all_trainers():
 
 def create_trainer():
     from cli import trainers_menu
-    name = input("Enter Your New Trainer's Name: ")
+    name = input("Enter Your New Trainer's Name: ").lower()
     uncaught_pokemon = random_pokemon()
 
     clear_cli()
 
     # Filter thru all Trainers 
-    trainer_list = [trainer.name.lower() for trainer in Trainer.get_all() if name.lower() == trainer.name.lower()]
+    trainer_list = [trainer.name.lower() for trainer in Trainer.get_all() if name == trainer.name.lower()]
 
-    # breakpoint()
-    if name.lower() in trainer_list:
+    # Prevents creating Trainers with the same name
+    if name in trainer_list:
         print("That Trainer Name Already Exists, Please Try Again.")
         trainers_menu()
         create_trainer()
     else:
-        if isinstance(name, str) and 15 >= len(name) >= 5:
+        try:
             new_trainer = Trainer.create(name.title())
             uncaught_pokemon.trainer_id = new_trainer.id
             uncaught_pokemon.update()
@@ -49,51 +49,57 @@ def create_trainer():
 
             print(f"{name.title()} Has Joined The Team!")
             print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {uncaught_pokemon.name}")
-        else:
+        except:
             clear_cli()
-            print("Please Enter A Name Between 5 And 15 Characters Long: ")
+            print("Please Enter A Name Between 5 And 15 Characters Long. ")
             trainers_menu()
             create_trainer()
-        # breakpoint()
-
-    
 
 def delete_trainer():
     from cli import trainers_main
     
-    name = input("Enter Trainer's Name to Delete: ")
+    name = input("Enter Trainer's Name to Delete: ").lower()
     trainers = Trainer.get_all()
     lowered_trainers = [trainer.name.lower() for trainer in trainers]
 
-    if name.lower() not in lowered_trainers:
+    if name not in lowered_trainers:
         print("Please Enter Valid Trainer Name. ")
         trainers_main()
     else:
         for trainer in trainers:
-            if trainer.name.lower() == name.lower():
+            if trainer.name.lower() == name:
                 # Deletes Trainer's pokemon from DB before deleting trainer
                 for pokemon in trainer.pokemon():
                     pokemon.delete()
+                    # breakpoint()
                 trainer.delete()
-            else:
-                clear_cli()
-                print("No Trainer Found By That Name.")
-                trainers_main()
-
+                print(f'{trainer.name} Has Left The Team!')
+                break
+        else:
+            # breakpoint()
+            clear_cli()
+            print("No Trainer Found By That Name.")
+            trainers_main()
+            
         clear_cli()
         print(f"Trainer {trainer.name} Has Left The Team!")
 
 
 
-def update_trainer_name():
+def update_trainer_name(trainer):
+    from cli import trainer_page, trainer_profile
+    
     clear_cli()
+    trainer_page(trainer)
+
     if trainer := Trainer.find_by_name(current_trainer[0].name):
         new_name = input("Enter New Name for Trainer: ").title()
         trainer.name = new_name
         trainer.update()
-        print(f"Trainer Has Been Renamed To {trainer.name}!")
         
-        from cli import trainer_profile
+        clear_cli()
+        
+        print(f"Trainer Has Been Renamed To {trainer.name}!")
         trainer_profile(trainer)
     else:
         print("Unable To Update Trainer Name At This Time.")
