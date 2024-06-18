@@ -12,6 +12,7 @@ def clear_cli():
 
 # Random Pokemon generator from pokemon_list
 def random_pokemon():
+    # Ensures random Pokemon is an Uncaught / Without a Trainer
     uncaught_pokemon = [pokemon for pokemon in Pokemon.get_all() if pokemon.trainer_id == 0]
     randomized_pokemon = random.choice(uncaught_pokemon)
     return randomized_pokemon
@@ -62,19 +63,20 @@ def delete_trainer():
     trainers = Trainer.get_all()
     lowered_trainers = [trainer.name.lower() for trainer in trainers]
 
+    # Checks if input is doesn't exist in the DB
     if name not in lowered_trainers:
         print("Please Enter Valid Trainer Name. ")
         trainers_main()
     else:
         for trainer in trainers:
             if trainer.name.lower() == name:
-                # Deletes Trainer's pokemon from DB before deleting trainer
+                # Resets trainer's pokemon trainer_id to 0
                 for pokemon in trainer.pokemon():
-                    pokemon.delete()
-                    # breakpoint()
+                    pokemon.trainer_id = 0
+                    pokemon.update()
                 trainer.delete()
                 print(f'{trainer.name} Has Left The Team!')
-                break
+                break # Stops loop once matching trainer is found/deleted
         else:
             # breakpoint()
             clear_cli()
@@ -202,8 +204,9 @@ def delete_trainer_pokemon(trainer):
 
 def create_pokemon():
     from cli import main_page, main
-    main_page()
     valid_types = ["Fire", "Water", "Grass", "Electric"]
+
+    main_page()
 
     name = input("Enter New Pokemon Name: ").title()
     

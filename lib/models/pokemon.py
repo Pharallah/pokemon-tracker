@@ -133,7 +133,7 @@ class Pokemon:
         """
 
         rows = CURSOR.execute(sql).fetchall()
-        print(type(rows))
+    
         return [cls.instance_from_db(row) for row in rows]
 
     @classmethod

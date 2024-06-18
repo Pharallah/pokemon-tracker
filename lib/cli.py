@@ -285,4 +285,5 @@ def battle_profile(trainer):
             trainer_profile(trainer)
 
 if __name__ == "__main__":
+    clear_cli()
     main()
