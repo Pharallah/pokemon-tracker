@@ -1,18 +1,20 @@
 # lib/cli.py
 
+from models.trainer import Trainer
+from models.pokemon import Pokemon
 from helpers import (
     exit_program,
     create_trainer,
-    view_all_trainers,
     delete_trainer,
-    trainer_instance,
+    trainer_selector,
     update_trainer_name,
-    return_current_trainer,
-    catch_pokemon,
+    battle_scene,
     delete_trainer_pokemon,
     clear_cli,
     create_pokemon,
-    delete_pokemon
+    delete_pokemon,
+    get_all,
+    create_wild_pokemon
 )
 
 def main_page():
@@ -55,46 +57,11 @@ def main():
             create_pokemon()
         elif choice == "p":
             clear_cli()
-            all_pokemon()
-            pass
+            all_pokemon_menu(get_all(Trainer), get_all(Pokemon))
         else:
             clear_cli()
             print("Invalid Choice, Please choose from the following options.")
             main()
-
-def all_pokemon():
-    from models.pokemon import Trainer, Pokemon
-    
-    all_trainers = Trainer.get_all()
-    all_pokemon = Pokemon.get_all()
-    
-    clear_cli()
-    
-    all_pokemon_menu(all_trainers, all_pokemon)
-
-def all_pokemon_page(all_trainers, all_pokemon):
-    print("*********************************************************************")
-    print(f"                             POKÉDEX                                ")
-    print("*********************************************************************")
-    if len(all_pokemon) > 0:
-        # Create a dictionary mapping trainer IDs to trainer names
-        trainer_dict = {trainer.id: trainer.name for trainer in all_trainers}
-        # Iterate through the Pokémon and print the corresponding trainer if found
-        for index, pokemon in enumerate(all_pokemon, start=1):
-            trainer_name = trainer_dict.get(pokemon.trainer_id)
-            if trainer_name:
-                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer_name}")
-            else:
-                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Uncaught")
-    else:
-        print(f"             No Pokémon Found In The Wild.            ")
-    print("*********************************************************************")
-    print("                  Please choose from the following:                  ")
-    print("*********************************************************************")
-    print("                  Press d to Delete a Pokémon                        ")
-    print("                  Press b to Go Back                                 ")
-    print("                  Press e to Exit App                                ")
-    print("---------------------------------------------------------------------")     
 
 def all_pokemon_menu(all_trainers, all_pokemon):
     while True:
@@ -114,10 +81,35 @@ def all_pokemon_menu(all_trainers, all_pokemon):
             print("Invalid Choice, Please choose from the following options.")
             all_pokemon_menu(all_trainers, all_pokemon)
 
+def all_pokemon_page(all_trainers, all_pokemon):
+    print("*********************************************************************")
+    print(f"                             POKÉDEX                                ")
+    print("*********************************************************************")
+    if len(all_pokemon) > 0:
+        # Create a dictionary mapping trainer IDs to trainer names
+        trainer_dict = {trainer.id: trainer.name for trainer in all_trainers}
+        # Iterate through the Pokémon and print their corresponding Trainer if Caught, else Uncaught
+        for index, pokemon in enumerate(all_pokemon, start=1):
+            trainer_name = trainer_dict.get(pokemon.trainer_id)
+            if trainer_name:
+                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Trainer: {trainer_name}")
+            else:
+                print(f"{index}. {pokemon.name} | {pokemon.pokemon_type} | Uncaught")
+    else:
+        print(f"             No Pokémon Found In The Wild.                      ")
+    print("*********************************************************************")
+    print("                  Please choose from the following:                  ")
+    print("*********************************************************************")
+    print("                  Press d to Delete a Pokémon                        ")
+    print("                  Press b to Go Back                                 ")
+    print("                  Press e to Exit App                                ")
+    print("---------------------------------------------------------------------")     
+
 def trainers_menu():
     print("*********************************************************************")
     print("                        Team Red Trainers:                           ")
-    view_all_trainers()
+    for index, trainer in enumerate(get_all(Trainer), start=1):
+        print(f"                  {index}. {trainer.name}")
     print("*********************************************************************")
     print("                  Please choose from the following:                  ")
     print("*********************************************************************")
@@ -150,8 +142,6 @@ def trainers_main():
             clear_cli()
             print("Invalid choice, try again")
             trainers_main()
-            
-
 
 def trainer_page(trainer):
     print("*********************************************************************")
@@ -175,10 +165,6 @@ def trainer_page(trainer):
     print("                  Press e to Exit App                                ")
     print("---------------------------------------------------------------------")
 
-def trainer_selector():
-    trainer = trainer_instance()
-    trainer_profile(trainer)
-
 def trainer_profile(trainer):
     trainer_page(trainer)
     while True:
@@ -189,7 +175,7 @@ def trainer_profile(trainer):
         elif choice == "u":
             update_trainer_name(trainer)
         elif choice == "c":
-            trainer_battle_selector()
+            trainer_battle_selector(trainer)
         elif choice == "r":
             delete_trainer_pokemon(trainer)
         elif choice == "d":
@@ -241,16 +227,16 @@ def view_all_pokemon(trainer):
             print("Invalid choice, try again")
             trainer_profile(trainer)
 
-def battle_cli(trainer):
+def battle_cli(trainer, wild_pokemon):
     print("*********************************************************************")
-    print(f"                         {trainer.name.upper()} WANTS TO FIGHT!   \n")
+    print(f"                    A WILD {wild_pokemon.name.upper()} HAS APPEARED!!!    ")
     print("                                       ,     ,                       ")
     print("                                     (\\____/)                       ")
     print("                                      (_oo_)                         ")
     print("                                        (O)                          ")
-    print("                                      __||__    \\)                  ")
+    print("                                      __||__    \\]                   ")
     print("..................................'    \\..'..\\..'./..................\n")
-    print("          AN UNKNOWN POKEMON HAS APPEARED!!!                       \n")
+    print(f"             {trainer.name.upper()} WANTS TO FIGHT!   \n")
     print("         /\_/\                                                       ")
     print("        ( o.o )                                                      ")
     print("         > ^ <                                                     \n")
@@ -260,9 +246,8 @@ def battle_cli(trainer):
     print("|                  1. Fight                2. Run                   |")
     print("---------------------------------------------------------------------")
 
-def trainer_battle_selector():
+def trainer_battle_selector(trainer):
     clear_cli()
-    trainer = return_current_trainer()
     if len(trainer.pokemon()) >= 6:
         print(f"Max Roster Capacity Reached!\nRelease a Pokemon From Roster Before Catching Anymore!")
         trainer_profile(trainer)
@@ -270,11 +255,12 @@ def trainer_battle_selector():
         battle_profile(trainer)
 
 def battle_profile(trainer):
-    battle_cli(trainer)
+    wild_pokemon = create_wild_pokemon(trainer)
+    battle_cli(trainer, wild_pokemon)
     while True:
         choice = input("> ")
         if choice == "1" or choice == "Fight" or choice == "fight":
-            catch_pokemon(trainer)
+            battle_scene(trainer, wild_pokemon)
         elif choice == "2" or choice == "Run" or choice == "run":
             clear_cli()
             print(f"{trainer.name} got away from the wild Pokemon!")
