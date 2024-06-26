@@ -25,67 +25,53 @@ def get_all(model):
 
 def create_trainer():
     from cli import trainers_menu
+    
     name = input("Enter Your New Trainer's Name: ").title()
     uncaught_pokemon = random_pokemon()
-
-    clear_cli()
-
-    # Checks input from existing Trainer in DB
-    # Walrus operator assigns & returns the value of expression concurrently
-    if trainer_in_db:= Trainer.find_by_name(name):
+    
+    while Trainer.find_by_name(name):
+        clear_cli()
         print("That Trainer Name Already Exists, Please Try Again.")
         trainers_menu()
-        create_trainer()
+        name = input("Enter Your New Trainer's Name: ").title()
+
+    if 5 <= len(name) <= 15:
+        new_trainer = Trainer.create(name.title())
+        uncaught_pokemon.trainer_id = new_trainer.id
+        uncaught_pokemon.update()
+
+        clear_cli()
+
+        print(f"{name.title()} Has Joined The Team!")
+        print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {uncaught_pokemon.name}")
     else:
-        try:
-            new_trainer = Trainer.create(name.title())
-            uncaught_pokemon.trainer_id = new_trainer.id
-            uncaught_pokemon.update()
-
-            clear_cli()
-
-            print(f"{name.title()} Has Joined The Team!")
-            print(f"Professor Oak Has Given {new_trainer.name} Their First Pokemon: {uncaught_pokemon.name}")
-        except:
-            clear_cli()
-            print("Please Enter A Name Between 5 And 15 Characters Long. ")
-            trainers_menu()
-            create_trainer()
+        clear_cli()
+        print("Name Must Be Between 5 & 15 Characters Long. Please Try Again")
+        trainers_menu()
+        return create_trainer()
 
 def delete_trainer():
-    from cli import trainers_main
+    from cli import trainers_menu
+
     name = input("Enter Trainer's Name to Delete: ").title()
-
-    # Checks if input is doesn't exist in the DB
-    if Trainer.find_by_name(name) == None:
-        print("Please Enter Valid Trainer Name. ")
-        trainers_main()
-    else:
-        for trainer in get_all(Trainer):
-            if trainer.name == name:
-                # Resets trainer's pokemon trainer_id to 0
-                for pokemon in trainer.pokemon():
-                    pokemon.trainer_id = 0
-                    pokemon.update()
-                trainer.delete()
-                print(f'{trainer.name} Has Left The Team!')
-                break # Stops loop once matching trainer is found & deleted
-        else:
-            # breakpoint()
-            clear_cli()
-            print("No Trainer Found By That Name.")
-            trainers_main()
-            
+    trainer = Trainer.find_by_name(name)
+    
+    while not trainer:
         clear_cli()
-        print(f"Trainer {trainer.name} Has Left The Team!")
+        print("Please Enter Valid Trainer Name. ")
+        trainers_menu()
+        name = input("Enter Trainer's Name to Delete: ").title()
+        trainer = Trainer.find_by_name(name)
 
-def update_trainer_name(trainer):
-    from cli import trainer_page, trainer_profile
+    for pokemon in trainer.pokemon():
+        pokemon.trainer_id = 0
+        pokemon.update()
     
     clear_cli()
-    trainer_page(trainer)
+    trainer.delete()
+    print(f'{trainer.name} Has Left The Team!')
 
-    # Checks if the current Trainer actually exists in the DB
+def update_trainer_name(trainer):
     if trainer := Trainer.find_by_name(trainer.name):
         new_name = input("Enter New Name for Trainer: ").title()
         trainer.name = new_name
@@ -94,25 +80,23 @@ def update_trainer_name(trainer):
         clear_cli()
         
         print(f"Trainer Has Been Renamed To {trainer.name}!")
-        trainer_profile(trainer)
     else:
         print("Cannot Update Trainer. Trainer Doesn't Exist.")
 
 def trainer_selector():
     from cli import trainer_profile
-    name = input("Enter Trainer's Name From List: ").title()
     
-    # Checks user input against DB & returns Trainer object with matching name
-    if Trainer.find_by_name(name):
+    name = input("Enter Trainer's Name From List: ").title()
+    trainer = Trainer.find_by_name(name)
+    
+    if trainer:
         clear_cli()
-        for trainer in get_all(Trainer):
-            if trainer.name == name:
-                trainer_profile(trainer)
+        trainer_profile(trainer)
     else:
-        print("Please Enter Valid Trainer Name From The List Above.")
-        trainer_selector() # Rerun method
+        clear_cli() 
+        print("Please Enter Valid Trainer Name From The Team List. Please Try Again.")
         
-def create_wild_pokemon(trainer):
+def create_wild_pokemon():
     wild_pokemon = random_pokemon()
     return wild_pokemon
 
@@ -157,21 +141,21 @@ def battle_scene(trainer, wild_pokemon):
 
 def delete_trainer_pokemon(trainer):
     from cli import trainer_profile
+    
     # Ensures Trainers can't delete their only Pokemon
     if len(trainer.pokemon()) == 1:
         clear_cli()
         print(f"Trainers Must Have At Least 1 Pokemon In Their Roster To Fight With!")
         trainer_profile(trainer)
     else:
-        target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ")
+        pokemon_in_trainer_roster = [p.name for p in trainer.pokemon()]
+        target_pokemon = input(f"Enter Pokemon's Name From Roster to Release: ").title()
         
         clear_cli()
-        
-        trainers_pokemon = [p.name.lower() for p in trainer.pokemon()]
 
-        if target_pokemon.lower() in trainers_pokemon:
+        if target_pokemon in pokemon_in_trainer_roster:
             for pokemon in trainer.pokemon():
-                if pokemon.name.lower() == target_pokemon.lower():
+                if pokemon.name == target_pokemon:
                     pokemon.trainer_id = 0
                     pokemon.update()
                     print(f"Released {pokemon.name} Back To The Wild!")
@@ -223,7 +207,6 @@ def delete_pokemon(all_trainers, all_pokemon):
     
     pokemon_name = input("Enter Pokémon Name To Delete: ").lower()
     pokemon_list = [pokemon for pokemon in all_pokemon if pokemon_name == pokemon.name.lower()]
-    
 
     if len(pokemon_list) > 0:
         pokemon_list[0].delete()

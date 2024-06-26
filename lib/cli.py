@@ -79,7 +79,6 @@ def all_pokemon_menu(all_trainers, all_pokemon):
         else:
             clear_cli()
             print("Invalid Choice, Please choose from the following options.")
-            all_pokemon_menu(all_trainers, all_pokemon)
 
 def all_pokemon_page(all_trainers, all_pokemon):
     print("*********************************************************************")
@@ -121,27 +120,24 @@ def trainers_menu():
     print("---------------------------------------------------------------------")
 
 def trainers_main():
-    trainers_menu()
     while True:
+        trainers_menu()
         choice = input("> ")
         if choice == "b":
             clear_cli()
             main()
         elif choice == "a":
             create_trainer()
-            trainers_main()
         elif choice == "v":
             trainer_selector()
         elif choice == "d":
             delete_trainer()
-            trainers_main()
         elif choice == "e":
             clear_cli()
             exit_program()
         else:
             clear_cli()
             print("Invalid choice, try again")
-            trainers_main()
 
 def trainer_page(trainer):
     print("*********************************************************************")
@@ -166,8 +162,8 @@ def trainer_page(trainer):
     print("---------------------------------------------------------------------")
 
 def trainer_profile(trainer):
-    trainer_page(trainer)
     while True:
+        trainer_page(trainer)
         choice = input("> ")
         if choice == "b":
             clear_cli()
@@ -190,7 +186,6 @@ def trainer_profile(trainer):
         else:
             clear_cli()
             print("Invalid choice, try again")
-            trainer_profile(trainer)
 
 def view_trainer_pokemon(trainer):
     print("*********************************************************************")
@@ -213,8 +208,8 @@ def view_trainer_pokemon(trainer):
 
 def view_all_pokemon(trainer):
     clear_cli()
-    view_trainer_pokemon(trainer)
     while True:
+        view_trainer_pokemon(trainer)
         choice = input("> ")
         if choice == "b":
             clear_cli()
@@ -234,7 +229,7 @@ def battle_cli(trainer, wild_pokemon):
     print("                                     (\\____/)                       ")
     print("                                      (_oo_)                         ")
     print("                                        (O)                          ")
-    print("                                      __||__    \\]                   ")
+    print("                                      __(O)__    \\                   ")
     print("..................................'    \\..'..\\..'./..................\n")
     print(f"             {trainer.name.upper()} WANTS TO FIGHT!   \n")
     print("         /\_/\                                                       ")
@@ -255,7 +250,7 @@ def trainer_battle_selector(trainer):
         battle_profile(trainer)
 
 def battle_profile(trainer):
-    wild_pokemon = create_wild_pokemon(trainer)
+    wild_pokemon = create_wild_pokemon()
     battle_cli(trainer, wild_pokemon)
     while True:
         choice = input("> ")
